@@ -9,7 +9,7 @@
 
 struct User {
     @Validated(.notEmpty, .lessThan(10), .between(0, 10)) var name: String = ""
-    
+
     // Using the new ValidatedOptional property wrapper
     @OptionalValidated(.notRequired, .notEmpty, .lessThan(10)) var nickname: String? = nil
     
@@ -17,7 +17,7 @@ struct User {
     @OptionalValidated(.notRequired, .notEmpty, .greaterThan(3)) var email: String? = nil
     
     // Example with custom validation for optional
-    @OptionalValidated var phoneNumber: String? = nil
+    @OptionalValidated(.required) var phoneNumber: String? = nil
     
     init(name: String, nickname: String? = nil, email: String? = nil, phoneNumber: String? = nil) {
         self.name = name
@@ -25,6 +25,13 @@ struct User {
         self.email = email
         self.phoneNumber = phoneNumber
     }
+}
+
+
+func processUser() {
+    let user = User(name: "Robert", nickname: "Bob", email: "rob@bob.com", phoneNumber: "+1212388746")
+    
+    user.$name.validate("Hi")
 }
 
 //// Example of using optional validators

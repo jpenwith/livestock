@@ -7,23 +7,26 @@ public protocol Validator {
     /// Validates the given value against this validator's rules.
     /// - Parameter value: The value to validate.
     /// - Returns: Boolean indicating if validation passed.
-    func validate(_ value: Value) -> Bool
-
-    /// An optional validation error message.
-    var errorMessage: String { get }
+    func validate(_ value: Value) throws(ValidationError)
 }
 
 
-struct AnyValidator<Value> {
-    private let validate: (Value) -> Bool
-    let errorMessage: String
+public struct ValidationError: Error {
+    public let message: String
+    
+    public init(message: String) {
+        self.message = message
+    }
+}
 
-    init<V: Validator>(_ validator: V) where V.Value == Value {
+public struct AnyValidator<Value> {
+    private let validate: (Value) throws(ValidationError) -> Void
+
+    public init<V: Validator>(_ validator: V) where V.Value == Value {
         validate = validator.validate
-        errorMessage = validator.errorMessage
     }
 
-    func validate(_ value: Value) -> Bool {
-        validate(value)
+    func validate(_ value: Value) throws(ValidationError) {
+        try validate(value)
     }
 }

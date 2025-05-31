@@ -13,36 +13,30 @@ extension Validators {
 
 extension Validators.String {
     struct NotEmpty: Validator {
-        func validate(_ value: String) -> Bool {
-            !value.isEmpty
-        }
-        
-        var errorMessage: String {
-            "Value is empty"
+        func validate(_ value: String) throws(ValidationError) {
+            guard !value.isEmpty else {
+                throw .init(message: "Value is empty")
+            }
         }
     }
 
     struct CountLessThan: Validator {
         let upperBound: Int
 
-        func validate(_ value: String) -> Bool {
-            value.count < upperBound
-        }
-        
-        var errorMessage: String {
-            "Value is >= \(upperBound)"
+        func validate(_ value: String) throws(ValidationError) {
+            guard value.count < upperBound else {
+                throw .init(message: "\(value) is >= \(upperBound)")
+            }
         }
     }
 
     struct CountGreaterThan: Validator {
         let lowerBound: Int
 
-        func validate(_ value: String) -> Bool {
-            value.count > lowerBound
-        }
-
-        var errorMessage: String {
-            "Value is <= \(lowerBound)"
+        func validate(_ value: String) throws(ValidationError) {
+            guard value.count > lowerBound else {
+                throw .init(message: "\(value) is <= \(lowerBound)")
+            }
         }
     }
 
@@ -50,12 +44,14 @@ extension Validators.String {
         let lowerBound: Int
         let upperBound: Int
 
-        func validate(_ value: String) -> Bool {
-            value.count >= lowerBound && value.count <= upperBound
-        }
-
-        var errorMessage: String {
-            "Value is < \(lowerBound) or > \(upperBound)"
+        func validate(_ value: String) throws(ValidationError) {
+            guard value.count >= lowerBound else {
+                throw .init(message: "\(value) is < \(lowerBound)")
+            }
+                    
+            guard value.count <= upperBound else {
+                throw .init(message: "\(value) is > \(upperBound)")
+            }
         }
     }
 }
