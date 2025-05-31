@@ -1,12 +1,8 @@
 import Foundation
 
-/// A validator can check if a value conforms to specific rules.
 public protocol Validator {
     associatedtype Value
 
-    /// Validates the given value against this validator's rules.
-    /// - Parameter value: The value to validate.
-    /// - Returns: Boolean indicating if validation passed.
     func validate(_ value: Value) throws(ValidationError)
 }
 

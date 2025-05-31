@@ -7,6 +7,7 @@
 
 @propertyWrapper struct Validated<Value> {
     let validators: [AnyValidator<Value>]
+
     var errors: [ValidationError] = []
 
     init(wrappedValue: Value, _ validators: AnyValidator<Value>...) {
@@ -27,22 +28,23 @@
     func validate(_ value: Value) -> [ValidationError] {
         validators.validate(value)
     }
-    
+
     var isValid: Bool { errors.isEmpty }
 
     var projectedValue: Self { self }
 }
 
-// Specialized version for optional values
 @propertyWrapper struct OptionalValidated<Value> {
     let required: Required
+    
     let validators: [AnyValidator<Value>]
+    
     var errors: [ValidationError] = []
-
+    
     init(wrappedValue: Value? = nil, _ required: Required, _ validators: AnyValidator<Value>...) {
         self.init(wrappedValue: wrappedValue, required, validators)
     }
-
+    
     init(wrappedValue: Value? = nil, _ required: Required, _ validators: [AnyValidator<Value>]) {
         self.wrappedValue = wrappedValue
         self.required = required
@@ -54,7 +56,7 @@
     var wrappedValue: Value? {
         didSet { self.errors = validate(wrappedValue) }
     }
-
+    
     func validate(_ value: Value?) -> [ValidationError] {
         if let value {
             return validators.validate(value)
@@ -70,9 +72,11 @@
     }
     
     var isValid: Bool { errors.isEmpty }
-
-    var projectedValue: Self { self }
     
+    var projectedValue: Self { self }
+}
+
+extension OptionalValidated {
     enum Required {
         case required
         case notRequired

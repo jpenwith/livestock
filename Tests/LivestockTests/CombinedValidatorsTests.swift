@@ -4,9 +4,6 @@ import Foundation
 
 @Suite("Combined Validators Tests")
 struct CombinedValidatorsTests {
-
-    // MARK: - Multiple String Validators
-
     @Test("String with multiple validators - all passing")
     func stringWithMultipleValidatorsAllPassing() throws {
         @Validated(.notEmpty, .lessThan(12), .email)
@@ -148,25 +145,23 @@ struct CombinedValidatorsTests {
 
     @Test("Custom validator combined with standard validators")
     func customValidatorWithStandardValidators() throws {
-//        let customEmailDomainValidator = { (value: String) throws(ValidationError) in
-//            if !value.hasSuffix("@company.com") {
-//                throw ValidationError(message: "Email must use company domain")
-//            }
-//        }
-//
-//        @Validated(.notEmpty, .email, AnyValidator<String>(validate: customEmailDomainValidator))
-//        var email = "user@company.com"
-//
-//        #expect($email.isValid)
-//
-//        email = "user@gmail.com"
-//        #expect(!$email.isValid)
-//        #expect($email.errors.count == 1)
-//        #expect($email.errors.first?.message == "Email must use company domain")
-//
-//        email = "not-an-email"
-//        #expect(!$email.isValid)
-//        #expect($email.errors.count == 1)
-//        #expect($email.errors.first?.message.contains("is not an email"))
+        @Validated(.notEmpty, .email, .custom(validator: { (value: String) throws(ValidationError) in
+            guard value.hasSuffix("@company.com") else {
+                throw ValidationError(message: "Email must use company domain")
+            }
+        }))
+
+        var email = "user@company.com"
+        #expect($email.isValid)
+
+        email = "user@gmail.com"
+        #expect(!$email.isValid)
+        #expect($email.errors.count == 1)
+        #expect($email.errors.first?.message == "Email must use company domain")
+
+        email = "not-an-email"
+        #expect(!$email.isValid)
+        #expect($email.errors.count == 2)
+        #expect($email.errors.first?.message.contains("is not an email") ?? false)
     }
 }
