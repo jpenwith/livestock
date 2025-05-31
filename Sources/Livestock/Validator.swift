@@ -30,3 +30,21 @@ public struct AnyValidator<Value> {
         try validate(value)
     }
 }
+
+extension Array {
+    func validate<Value>(_ value: Value) -> [ValidationError] where Element == AnyValidator<Value> {
+        compactMap { (validator) -> ValidationError? in
+            do {
+                try validator.validate(value)
+            }
+            catch let error as ValidationError {
+                return error
+            }
+            catch {
+                return nil
+            }
+
+            return nil
+        }
+    }
+}

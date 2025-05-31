@@ -10,30 +10,22 @@
     var errors: [ValidationError] = []
 
     init(wrappedValue: Value, _ validators: AnyValidator<Value>...) {
-        self.validators = validators
+        self.init(wrappedValue: wrappedValue, validators)
+    }
+    
+    init(wrappedValue: Value, _ validators: [AnyValidator<Value>]) {
         self.wrappedValue = wrappedValue
+        self.validators = validators
+
         self.errors = validate(wrappedValue)
     }
     
     var wrappedValue: Value {
-        didSet {
-            self.errors = validate(wrappedValue)
-        }
+        didSet { self.errors = validate(wrappedValue) }
     }
 
     func validate(_ value: Value) -> [ValidationError] {
-        var errors: [ValidationError] = []
-
-        for validator in validators {
-            do {
-                try validator.validate(value)
-            }
-            catch {
-                errors.append(error)
-            }
-        }
-
-        return errors
+        validators.validate(value)
     }
     
     var isValid: Bool { errors.isEmpty }
@@ -48,41 +40,38 @@
     var errors: [ValidationError] = []
 
     init(wrappedValue: Value? = nil, _ required: Required, _ validators: AnyValidator<Value>...) {
+        self.init(wrappedValue: wrappedValue, required, validators)
+    }
+
+    init(wrappedValue: Value? = nil, _ required: Required, _ validators: [AnyValidator<Value>]) {
         self.wrappedValue = wrappedValue
         self.required = required
         self.validators = validators
+        
+        self.errors = validate(wrappedValue)
     }
     
     var wrappedValue: Value? {
-        didSet {
-            self.errors = validate(wrappedValue)
-        }
+        didSet { self.errors = validate(wrappedValue) }
     }
-    
+
     func validate(_ value: Value?) -> [ValidationError] {
-        var errors: [ValidationError] = []
-        
         if let value {
-            for validator in validators {
-                do {
-                    try validator.validate(value)
-                }
-                catch {
-                    errors.append(error)
-                }
+            return validators.validate(value)
+        }
+        else {
+            if required == .required {
+                return [.init(message: "Value is required")]
+            }
+            else {
+                return []
             }
         }
-        else if required == .required {
-            errors.append(.init(message: "Value is required"))
-        }
-
-        return errors
     }
     
     var isValid: Bool { errors.isEmpty }
 
     var projectedValue: Self { self }
-
     
     enum Required {
         case required

@@ -10,7 +10,6 @@
 struct User {
     @Validated(.notEmpty, .lessThan(10), .between(0, 10)) var name: String = ""
 
-    // Using the new ValidatedOptional property wrapper
     @OptionalValidated(.notRequired, .notEmpty, .lessThan(10)) var nickname: String? = nil
     
     // Alternative way to define optional validation
@@ -31,7 +30,7 @@ struct User {
 func processUser() {
     let user = User(name: "Robert", nickname: "Bob", email: "rob@bob.com", phoneNumber: "+1212388746")
     
-    user.$name.validate("Hi")
+    let _ = user.$name.validate("Hi")
 }
 
 //// Example of using optional validators
