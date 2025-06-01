@@ -43,6 +43,26 @@ extension Validators.Comparable {
                 throw .init(message: "Value is greater than \(upperBound)")
             }
         }
+    
+        struct IsGreaterThanOrEqualTo<T: Comparable>: Validator {
+            let lowerBound: T
+
+            func validate(_ value: T) throws(ValidationError) {
+                guard value >= lowerBound else {
+                    throw .init(message: "Value is not greater than or equal to \(lowerBound)")
+                }
+            }
+        }
+
+        struct IsLessThanOrEqualTo<T: Comparable>: Validator {
+            let upperBound: T
+
+            func validate(_ value: T) throws(ValidationError) {
+                guard value <= upperBound else {
+                    throw .init(message: "Value is not less than or equal to \(upperBound)")
+                }
+            }
+        }
     }
 }
 
@@ -50,4 +70,6 @@ extension AnyValidator where Value: Comparable {
     static func isGreaterThan(_ lowerBound: Value) -> Self { .init(Validators.Comparable.IsGreaterThan(lowerBound: lowerBound)) }
     static func isLessThan(_ upperBound: Value) -> Self { .init(Validators.Comparable.IsLessThan(upperBound: upperBound)) }
     static func isBetween(_ lowerBound: Value, _ upperBound: Value) -> Self { .init(Validators.Comparable.IsBetween(lowerBound: lowerBound, upperBound: upperBound)) }
+    static func isGreaterThanOrEqualTo(_ lowerBound: Value) -> Self { .init(Validators.Comparable.IsGreaterThanOrEqualTo(lowerBound: lowerBound)) }
+    static func isLessThanOrEqualTo(_ upperBound: Value) -> Self { .init(Validators.Comparable.IsLessThanOrEqualTo(upperBound: upperBound)) }
 }
