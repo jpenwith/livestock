@@ -56,7 +56,7 @@
     var wrappedValue: Value? {
         didSet { self.errors = validate(wrappedValue) }
     }
-    
+
     func validate(_ value: Value?) -> [ValidationError] {
         if let value {
             return validators.validate(value)
