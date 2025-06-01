@@ -52,6 +52,26 @@ extension Validators.String {
             }
         }
     }
+
+    struct IsCountLessThanOrEqualTo: Validator {
+        let upperBound: Int
+
+        func validate(_ value: String) throws(ValidationError) {
+            guard value.count <= upperBound else {
+                throw .init(message: "\(value) is > \(upperBound) characters")
+            }
+        }
+    }
+
+    struct IsCountGreaterThanOrEqualTo: Validator {
+        let lowerBound: Int
+
+        func validate(_ value: String) throws(ValidationError) {
+            guard value.count >= lowerBound else {
+                throw .init(message: "\(value) is < \(lowerBound) characters")
+            }
+        }
+    }
     
     struct Matches: Validator {
         let regex: Regex<Substring>
@@ -109,6 +129,9 @@ extension AnyValidator where Value == String {
     static func isLessThan(_ upperBound: Int) -> Self { .init(Validators.String.IsCountLessThan(upperBound: upperBound)) }
     static func isGreaterThan(_ lowerBound: Int) -> Self { .init(Validators.String.IsCountGreaterThan(lowerBound: lowerBound)) }
     static func isBetween(_ lowerBound: Int, _ upperBound: Int) -> Self { .init(Validators.String.IsCountBetween(lowerBound: lowerBound, upperBound: upperBound)) }
+
+    static func isLessThanOrEqualTo(_ upperBound: Int) -> Self { .init(Validators.String.IsCountLessThanOrEqualTo(upperBound: upperBound)) }
+    static func isGreaterThanOrEqualTo(_ lowerBound: Int) -> Self { .init(Validators.String.IsCountGreaterThanOrEqualTo(lowerBound: lowerBound)) }
     static func matches(_ regex: Regex<Substring>) -> Self { .init(Validators.String.Matches(regex: regex)) }
     static var  isEmailAddress: Self { .init(Validators.String.IsEmailAddress()) }
     static func contains(_ substring: String, caseSensitive: Bool = true) -> Self { .init(Validators.String.Contains(substring: substring, caseSensitive: caseSensitive)) }
