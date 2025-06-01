@@ -9,7 +9,7 @@ struct StringValidatorsTests {
     
     @Test("String.notEmpty validator passes for non-empty string")
     func notEmptyPassesForNonEmptyString() throws {
-        @Validated(.notEmpty)
+        @Validated(.isNotEmpty)
         var validValue = "Hello"
         
         #expect($validValue.isValid)
@@ -17,7 +17,7 @@ struct StringValidatorsTests {
     
     @Test("String.notEmpty validator fails for empty string")
     func notEmptyFailsForEmptyString() throws {
-        @Validated(.notEmpty)
+        @Validated(.isNotEmpty)
         var invalidValue = ""
         
         #expect(!$invalidValue.isValid)
@@ -29,7 +29,7 @@ struct StringValidatorsTests {
     
     @Test("String.lessThan validator passes for strings with length less than bound")
     func lessThanPassesForValidLength() throws {
-        @Validated(.lessThan(5))
+        @Validated(.isLessThan(5))
         var validValue = "Test"
         
         #expect($validValue.isValid)
@@ -37,7 +37,7 @@ struct StringValidatorsTests {
     
     @Test("String.lessThan validator fails for strings with length equal to bound")
     func lessThanFailsForEqualLength() throws {
-        @Validated(.lessThan(5))
+        @Validated(.isLessThan(5))
         var invalidValue = "Hello"
         
         #expect(!$invalidValue.isValid)
@@ -47,7 +47,7 @@ struct StringValidatorsTests {
     
     @Test("String.lessThan validator fails for strings with length greater than bound")
     func lessThanFailsForGreaterLength() throws {
-        @Validated(.lessThan(5))
+        @Validated(.isLessThan(5))
         var invalidValue = "Testing"
         
         #expect(!$invalidValue.isValid)
@@ -59,7 +59,7 @@ struct StringValidatorsTests {
     
     @Test("String.greaterThan validator passes for strings with length greater than bound")
     func greaterThanPassesForValidLength() throws {
-        @Validated(.greaterThan(3))
+        @Validated(.isGreaterThan(3))
         var validValue = "Test"
         
         #expect($validValue.isValid)
@@ -67,7 +67,7 @@ struct StringValidatorsTests {
     
     @Test("String.greaterThan validator fails for strings with length equal to bound")
     func greaterThanFailsForEqualLength() throws {
-        @Validated(.greaterThan(4))
+        @Validated(.isGreaterThan(4))
         var invalidValue = "Test"
         
         #expect(!$invalidValue.isValid)
@@ -77,7 +77,7 @@ struct StringValidatorsTests {
     
     @Test("String.greaterThan validator fails for strings with length less than bound")
     func greaterThanFailsForLessLength() throws {
-        @Validated(.greaterThan(5))
+        @Validated(.isGreaterThan(5))
         var invalidValue = "Test"
         
         #expect(!$invalidValue.isValid)
@@ -89,12 +89,12 @@ struct StringValidatorsTests {
     
     @Test("String.between validator passes for strings with length within bounds")
     func betweenPassesForValidLength() throws {
-        @Validated(.between(3, 5))
+        @Validated(.isBetween(3, 5))
         var validValue1 = "Hi!"
         
         #expect($validValue1.isValid)
         
-        @Validated(.between(3, 5))
+        @Validated(.isBetween(3, 5))
         var validValue2 = "Hello"
         
         #expect($validValue2.isValid)
@@ -102,7 +102,7 @@ struct StringValidatorsTests {
     
     @Test("String.between validator fails for strings with length less than lower bound")
     func betweenFailsForLessThanLowerBound() throws {
-        @Validated(.between(3, 5))
+        @Validated(.isBetween(3, 5))
         var invalidValue = "Hi"
         
         #expect(!$invalidValue.isValid)
@@ -112,7 +112,7 @@ struct StringValidatorsTests {
     
     @Test("String.between validator fails for strings with length greater than upper bound")
     func betweenFailsForGreaterThanUpperBound() throws {
-        @Validated(.between(3, 5))
+        @Validated(.isBetween(3, 5))
         var invalidValue = "Testing"
         
         #expect(!$invalidValue.isValid)
@@ -148,12 +148,12 @@ struct StringValidatorsTests {
     
     @Test("String.email validator passes for valid email addresses")
     func emailPassesForValidEmails() throws {
-        @Validated(.email)
+        @Validated(.isEmailAddress)
         var validValue1 = "test@example.com"
         
         #expect($validValue1.isValid)
         
-        @Validated(.email)
+        @Validated(.isEmailAddress)
         var validValue2 = "user.name+tag@domain.co.uk"
         
         #expect($validValue2.isValid)
@@ -161,14 +161,14 @@ struct StringValidatorsTests {
     
     @Test("String.email validator fails for invalid email addresses")
     func emailFailsForInvalidEmails() throws {
-        @Validated(.email)
+        @Validated(.isEmailAddress)
         var invalidValue1 = "not-an-email"
         
         #expect(!$invalidValue1.isValid)
         #expect($invalidValue1.errors.count == 1)
         #expect($invalidValue1.errors.first?.message.contains("is not an email") ?? false)
         
-        @Validated(.email)
+        @Validated(.isEmailAddress)
         var invalidValue2 = "missing@domain"
         
         #expect(!$invalidValue2.isValid)
@@ -213,12 +213,12 @@ struct StringValidatorsTests {
     
     @Test("String.alphaNumeric validator passes for alphanumeric strings")
     func alphaNumericPassesForValidStrings() throws {
-        @Validated(.alphaNumeric)
+        @Validated(.isAlphaNumeric)
         var validValue1 = "abc123"
         
         #expect($validValue1.isValid)
         
-        @Validated(.alphaNumeric)
+        @Validated(.isAlphaNumeric)
         var validValue2 = "ABC123"
         
         #expect($validValue2.isValid)
@@ -226,7 +226,7 @@ struct StringValidatorsTests {
     
     @Test("String.alphaNumeric validator fails for non-alphanumeric strings")
     func alphaNumericFailsForInvalidStrings() throws {
-        @Validated(.alphaNumeric)
+        @Validated(.isAlphaNumeric)
         var invalidValue = "abc-123"
         
         #expect(!$invalidValue.isValid)
@@ -242,12 +242,12 @@ struct CollectionValidatorsTests {
     
     @Test("Collection.notEmpty validator passes for non-empty collections")
     func notEmptyPassesForNonEmptyCollection() throws {
-        @Validated(.notEmpty)
+        @Validated(.isNotEmpty)
         var validArray = [1, 2, 3]
         
         #expect($validArray.isValid)
         
-        @Validated(.notEmpty)
+        @Validated(.isNotEmpty)
         var validString = "test"
         
         #expect($validString.isValid)
@@ -255,7 +255,7 @@ struct CollectionValidatorsTests {
     
     @Test("Collection.notEmpty validator fails for empty collections")
     func notEmptyFailsForEmptyCollection() throws {
-        @Validated(.notEmpty)
+        @Validated(.isNotEmpty)
         var invalidArray: [Int] = []
         
         #expect(!$invalidArray.isValid)
@@ -267,7 +267,7 @@ struct CollectionValidatorsTests {
     
     @Test("Collection.lessThan validator passes for collections with count less than bound")
     func lessThanPassesForValidCount() throws {
-        @Validated(.lessThan(5))
+        @Validated(.isLessThan(5))
         var validArray = [1, 2, 3]
         
         #expect($validArray.isValid)
@@ -275,14 +275,14 @@ struct CollectionValidatorsTests {
     
     @Test("Collection.lessThan validator fails for collections with count >= bound")
     func lessThanFailsForInvalidCount() throws {
-        @Validated(.lessThan(3))
+        @Validated(.isLessThan(3))
         var invalidArray = [1, 2, 3]
         
         #expect(!$invalidArray.isValid)
         #expect($invalidArray.errors.count == 1)
         #expect($invalidArray.errors.first?.message.contains("Collection count 3 is >= 3") ?? false)
         
-        @Validated(.lessThan(3))
+        @Validated(.isLessThan(3))
         var invalidArray2 = [1, 2, 3, 4]
         
         #expect(!$invalidArray2.isValid)
@@ -292,7 +292,7 @@ struct CollectionValidatorsTests {
     
     @Test("Collection.greaterThan validator passes for collections with count greater than bound")
     func greaterThanPassesForValidCount() throws {
-        @Validated(.greaterThan(2))
+        @Validated(.isGreaterThan(2))
         var validArray = [1, 2, 3]
         
         #expect($validArray.isValid)
@@ -300,14 +300,14 @@ struct CollectionValidatorsTests {
     
     @Test("Collection.greaterThan validator fails for collections with count <= bound")
     func greaterThanFailsForInvalidCount() throws {
-        @Validated(.greaterThan(3))
+        @Validated(.isGreaterThan(3))
         var invalidArray = [1, 2, 3]
         
         #expect(!$invalidArray.isValid)
         #expect($invalidArray.errors.count == 1)
         #expect($invalidArray.errors.first?.message.contains("Collection count 3 is <= 3") ?? false)
         
-        @Validated(.greaterThan(3))
+        @Validated(.isGreaterThan(3))
         var invalidArray2 = [1, 2]
         
         #expect(!$invalidArray2.isValid)
@@ -317,12 +317,12 @@ struct CollectionValidatorsTests {
     
     @Test("Collection.between validator passes for collections with count within bounds")
     func betweenPassesForValidCount() throws {
-        @Validated(.between(2, 4))
+        @Validated(.isBetween(2, 4))
         var validArray1 = [1, 2]
         
         #expect($validArray1.isValid)
         
-        @Validated(.between(2, 4))
+        @Validated(.isBetween(2, 4))
         var validArray2 = [1, 2, 3, 4]
         
         #expect($validArray2.isValid)
@@ -330,14 +330,14 @@ struct CollectionValidatorsTests {
     
     @Test("Collection.between validator fails for collections with count outside bounds")
     func betweenFailsForInvalidCount() throws {
-        @Validated(.between(2, 4))
+        @Validated(.isBetween(2, 4))
         var invalidArray1 = [1]
         
         #expect(!$invalidArray1.isValid)
         #expect($invalidArray1.errors.count == 1)
         #expect($invalidArray1.errors.first?.message.contains("Collection count 1 is < 2") ?? false)
         
-        @Validated(.between(2, 4))
+        @Validated(.isBetween(2, 4))
         var invalidArray2 = [1, 2, 3, 4, 5]
         
         #expect(!$invalidArray2.isValid)

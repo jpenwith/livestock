@@ -6,7 +6,7 @@ import Foundation
 struct CombinedValidatorsTests {
     @Test("String with multiple validators - all passing")
     func stringWithMultipleValidatorsAllPassing() throws {
-        @Validated(.notEmpty, .lessThan(12), .email)
+        @Validated(.isNotEmpty, .isLessThan(12), .isEmailAddress)
         var email = "hi@test.com"
 
         #expect($email.isValid)
@@ -15,7 +15,7 @@ struct CombinedValidatorsTests {
 
     @Test("String with multiple validators - one failing")
     func stringWithMultipleValidatorsOneFailing() throws {
-        @Validated(.notEmpty, .lessThan(10), .email)
+        @Validated(.isNotEmpty, .isLessThan(10), .isEmailAddress)
         var invalidEmail = "not-an-email"
 
         #expect(!$invalidEmail.isValid)
@@ -26,7 +26,7 @@ struct CombinedValidatorsTests {
 
     @Test("String with multiple validators - multiple failing")
     func stringWithMultipleValidatorsMultipleFailing() throws {
-        @Validated(.notEmpty, .lessThan(10), .email)
+        @Validated(.isNotEmpty, .isLessThan(10), .isEmailAddress)
         var invalidEmail = "this.is.too.long@example.c"
 
         #expect(!$invalidEmail.isValid)
@@ -39,10 +39,10 @@ struct CombinedValidatorsTests {
     @Test("Model with different property validators")
     func modelWithDifferentPropertyValidators() throws {
         struct User {
-            @Validated(.notEmpty, .lessThan(50))
+            @Validated(.isNotEmpty, .isLessThan(50))
             var name: String = ""
 
-            @Validated(.email)
+            @Validated(.isEmailAddress)
             var email: String = ""
 
             @Validated(.isGreaterThan(0), .isLessThan(120))
@@ -71,7 +71,7 @@ struct CombinedValidatorsTests {
             }
         }
 
-        @Validated(.notEmpty, .lessThan(5), .allPass(positiveNumber))
+        @Validated(.isNotEmpty, .isLessThan(5), .allPass(positiveNumber))
         var numbers = [1, 2, 3]
 
         #expect($numbers.isValid)
@@ -145,7 +145,7 @@ struct CombinedValidatorsTests {
 
     @Test("Custom validator combined with standard validators")
     func customValidatorWithStandardValidators() throws {
-        @Validated(.notEmpty, .email, .custom(validator: { (value: String) throws(ValidationError) in
+        @Validated(.isNotEmpty, .isEmailAddress, .custom(validator: { (value: String) throws(ValidationError) in
             guard value.hasSuffix("@company.com") else {
                 throw ValidationError(message: "Email must use company domain")
             }

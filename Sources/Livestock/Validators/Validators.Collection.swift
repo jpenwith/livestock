@@ -10,7 +10,7 @@ extension Validators {
 }
 
 extension Validators.Collection {
-    struct NotEmpty<T: Collection>: Validator {
+    struct IsNotEmpty<T: Collection>: Validator {
         func validate(_ value: T) throws(ValidationError) {
             guard !value.isEmpty else {
                 throw .init(message: "Collection is empty")
@@ -18,7 +18,7 @@ extension Validators.Collection {
         }
     }
     
-    struct CountLessThan<T: Collection>: Validator {
+    struct IsCountLessThan<T: Collection>: Validator {
         let upperBound: Int
         
         func validate(_ value: T) throws(ValidationError) {
@@ -28,7 +28,7 @@ extension Validators.Collection {
         }
     }
     
-    struct CountGreaterThan<T: Collection>: Validator {
+    struct IsCountGreaterThan<T: Collection>: Validator {
         let lowerBound: Int
         
         func validate(_ value: T) throws(ValidationError) {
@@ -38,7 +38,7 @@ extension Validators.Collection {
         }
     }
     
-    struct CountBetween<T: Collection>: Validator {
+    struct IsCountBetween<T: Collection>: Validator {
         let lowerBound: Int
         let upperBound: Int
         
@@ -80,18 +80,10 @@ extension Validators.Collection {
 }
 
 extension AnyValidator where Value: Collection {
-    static var  notEmpty: Self {
-        .init(Validators.Collection.NotEmpty())
-    }
-    static func lessThan(_ upperBound: Int) -> Self {
-        .init(Validators.Collection.CountLessThan(upperBound: upperBound))
-    }
-    static func greaterThan(_ lowerBound: Int) -> Self {
-        .init(Validators.Collection.CountGreaterThan(lowerBound: lowerBound))
-    }
-    static func between(_ lowerBound: Int, _ upperBound: Int) -> Self {
-        .init(Validators.Collection.CountBetween(lowerBound: lowerBound, upperBound: upperBound))
-    }
+    static var  isNotEmpty: Self { .init(Validators.Collection.IsNotEmpty()) }
+    static func isLessThan(_ upperBound: Int) -> Self { .init(Validators.Collection.IsCountLessThan(upperBound: upperBound)) }
+    static func isGreaterThan(_ lowerBound: Int) -> Self { .init(Validators.Collection.IsCountGreaterThan(lowerBound: lowerBound)) }
+    static func isBetween(_ lowerBound: Int, _ upperBound: Int) -> Self { .init(Validators.Collection.IsCountBetween(lowerBound: lowerBound, upperBound: upperBound)) }
     static func allPass(_ validator: @escaping (Value.Element) throws(ValidationError) -> Void) -> Self {
         .init(Validators.Collection.AllElementsPass(elementValidator: validator))
     }

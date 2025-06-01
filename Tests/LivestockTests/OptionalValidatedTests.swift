@@ -9,7 +9,7 @@ struct OptionalValidatedTests {
     
     @Test("OptionalValidated fails when required value is nil")
     func requiredValidationFailsForNilValue() throws {
-        @OptionalValidated(.required, .notEmpty)
+        @OptionalValidated(.required, .isNotEmpty)
         var requiredString: String?
         
         #expect(!$requiredString.isValid)
@@ -19,7 +19,7 @@ struct OptionalValidatedTests {
     
     @Test("OptionalValidated passes when required value is not nil")
     func requiredValidationPassesForNonNilValue() throws {
-        @OptionalValidated(.required, .notEmpty)
+        @OptionalValidated(.required, .isNotEmpty)
         var requiredString: String? = "Hello"
         
         #expect($requiredString.isValid)
@@ -29,7 +29,7 @@ struct OptionalValidatedTests {
     
     @Test("OptionalValidated passes when not required value is nil")
     func notRequiredValidationPassesForNilValue() throws {
-        @OptionalValidated(.notRequired, .notEmpty)
+        @OptionalValidated(.notRequired, .isNotEmpty)
         var optionalString: String?
         
         #expect($optionalString.isValid)
@@ -39,12 +39,12 @@ struct OptionalValidatedTests {
     
     @Test("OptionalValidated applies validators when value is not nil")
     func validatorsAppliedToNonNilValue() throws {
-        @OptionalValidated(.required, .notEmpty)
+        @OptionalValidated(.required, .isNotEmpty)
         var validString: String? = "Hello"
         
         #expect($validString.isValid)
         
-        @OptionalValidated(.required, .notEmpty)
+        @OptionalValidated(.required, .isNotEmpty)
         var invalidString: String? = ""
         
         #expect(!$invalidString.isValid)
@@ -54,12 +54,12 @@ struct OptionalValidatedTests {
     
     @Test("OptionalValidated with multiple validators")
     func multipleValidatorsApplied() throws {
-        @OptionalValidated(.required, .notEmpty, .lessThan(10))
+        @OptionalValidated(.required, .isNotEmpty, .isLessThan(10))
         var validString: String? = "Hello"
         
         #expect($validString.isValid)
         
-        @OptionalValidated(.required, .notEmpty, .lessThan(4))
+        @OptionalValidated(.required, .isNotEmpty, .isLessThan(4))
         var invalidString: String? = "Hello"
         
         #expect(!$invalidString.isValid)
@@ -71,7 +71,7 @@ struct OptionalValidatedTests {
     
     @Test("OptionalValidated validation updates when value changes")
     func validationUpdatesWithValueChanges() throws {
-        @OptionalValidated(.required, .notEmpty)
+        @OptionalValidated(.required, .isNotEmpty)
         var testString: String? = "Hello"
         
         #expect($testString.isValid)
@@ -93,7 +93,7 @@ struct OptionalValidatedTests {
     
     @Test("OptionalValidated with collection types")
     func validationWorksWithCollectionTypes() throws {
-        @OptionalValidated(.required, .notEmpty)
+        @OptionalValidated(.required, .isNotEmpty)
         var optionalArray: [Int]? = [1, 2, 3]
         
         #expect($optionalArray.isValid)
@@ -127,20 +127,20 @@ struct OptionalValidatedTests {
             let age: Int
         }
         
-        let validatePerson = { (person: Person) throws(ValidationError) in
+        let personValidator = { (person: Person) throws(ValidationError) in
             if person.age < 18 {
                 throw ValidationError(message: "Person must be an adult")
             }
         }
         
-//        @OptionalValidated(.required, AnyValidator<Person>(validate: validatePerson))
-//        var optionalPerson: Person? = Person(name: "John", age: 25)
-//        
-//        #expect($optionalPerson.isValid)
-//        
-//        optionalPerson = Person(name: "Child", age: 10)
-//        #expect(!$optionalPerson.isValid)
-//        #expect($optionalPerson.errors.count == 1)
-//        #expect($optionalPerson.errors.first?.message == "Person must be an adult")
+        @OptionalValidated(.required, .custom(validator: personValidator))
+        var optionalPerson: Person? = Person(name: "John", age: 25)
+        
+        #expect($optionalPerson.isValid)
+        
+        optionalPerson = Person(name: "Child", age: 10)
+        #expect(!$optionalPerson.isValid)
+        #expect($optionalPerson.errors.count == 1)
+        #expect($optionalPerson.errors.first?.message == "Person must be an adult")
     }
 }

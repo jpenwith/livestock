@@ -10,7 +10,7 @@ extension Validators {
 }
 
 extension Validators.String {
-    struct NotEmpty: Validator {
+    struct IsNotEmpty: Validator {
         func validate(_ value: String) throws(ValidationError) {
             guard !value.isEmpty else {
                 throw .init(message: "Value is empty")
@@ -18,7 +18,7 @@ extension Validators.String {
         }
     }
 
-    struct CountLessThan: Validator {
+    struct IsCountLessThan: Validator {
         let upperBound: Int
 
         func validate(_ value: String) throws(ValidationError) {
@@ -28,7 +28,7 @@ extension Validators.String {
         }
     }
 
-    struct CountGreaterThan: Validator {
+    struct IsCountGreaterThan: Validator {
         let lowerBound: Int
 
         func validate(_ value: String) throws(ValidationError) {
@@ -38,7 +38,7 @@ extension Validators.String {
         }
     }
 
-    struct CountBetween: Validator {
+    struct IsCountBetween: Validator {
         let lowerBound: Int
         let upperBound: Int
 
@@ -85,7 +85,7 @@ extension Validators.String {
         }
     }
     
-    struct AlphaNumeric: Validator {
+    struct IsAlphaNumeric: Validator {
         func validate(_ value: String) throws(ValidationError) {
             guard value.allSatisfy({ $0.isLetter || $0.isNumber }) else {
                 throw .init(message: "Value contains non-alphanumeric characters")
@@ -93,7 +93,7 @@ extension Validators.String {
         }
     }
     
-    struct Email: Validator {
+    struct IsEmailAddress: Validator {
         func validate(_ value: String) throws(ValidationError) {
             let emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,64}$/.ignoresCase()
 
@@ -105,12 +105,12 @@ extension Validators.String {
 }
 
 extension AnyValidator where Value == String {
-    static var  notEmpty: Self { .init(Validators.String.NotEmpty()) }
-    static func lessThan(_ upperBound: Int) -> Self { .init(Validators.String.CountLessThan(upperBound: upperBound)) }
-    static func greaterThan(_ lowerBound: Int) -> Self { .init(Validators.String.CountGreaterThan(lowerBound: lowerBound)) }
-    static func between(_ lowerBound: Int, _ upperBound: Int) -> Self { .init(Validators.String.CountBetween(lowerBound: lowerBound, upperBound: upperBound)) }
+    static var  isNotEmpty: Self { .init(Validators.String.IsNotEmpty()) }
+    static func isLessThan(_ upperBound: Int) -> Self { .init(Validators.String.IsCountLessThan(upperBound: upperBound)) }
+    static func isGreaterThan(_ lowerBound: Int) -> Self { .init(Validators.String.IsCountGreaterThan(lowerBound: lowerBound)) }
+    static func isBetween(_ lowerBound: Int, _ upperBound: Int) -> Self { .init(Validators.String.IsCountBetween(lowerBound: lowerBound, upperBound: upperBound)) }
     static func matches(_ regex: Regex<Substring>) -> Self { .init(Validators.String.Matches(regex: regex)) }
-    static var  email: Self { .init(Validators.String.Email()) }
+    static var  isEmailAddress: Self { .init(Validators.String.IsEmailAddress()) }
     static func contains(_ substring: String, caseSensitive: Bool = true) -> Self { .init(Validators.String.Contains(substring: substring, caseSensitive: caseSensitive)) }
-    static var  alphaNumeric: Self { .init(Validators.String.AlphaNumeric()) }
+    static var  isAlphaNumeric: Self { .init(Validators.String.IsAlphaNumeric()) }
 }
