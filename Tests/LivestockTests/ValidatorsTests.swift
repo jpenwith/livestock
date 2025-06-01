@@ -450,7 +450,7 @@ struct DateValidatorsTests {
     
     @Test("Date.isPast validator passes for past dates")
     func isPastPassesForPastDates() throws {
-        @Validated(.isPast)
+        @Validated(.isInThePast)
         var validDate = pastDate
         
         #expect($validDate.isValid)
@@ -458,7 +458,7 @@ struct DateValidatorsTests {
     
     @Test("Date.isPast validator fails for future dates")
     func isPastFailsForFutureDates() throws {
-        @Validated(.isPast)
+        @Validated(.isInThePast)
         var invalidDate = futureDate
         
         #expect(!$invalidDate.isValid)
@@ -470,7 +470,7 @@ struct DateValidatorsTests {
     
     @Test("Date.isFuture validator passes for future dates")
     func isFuturePassesForFutureDates() throws {
-        @Validated(.isFuture)
+        @Validated(.isInTheFuture)
         var validDate = futureDate
         
         #expect($validDate.isValid)
@@ -478,7 +478,7 @@ struct DateValidatorsTests {
     
     @Test("Date.isFuture validator fails for past dates")
     func isFutureFailsForPastDates() throws {
-        @Validated(.isFuture)
+        @Validated(.isInTheFuture)
         var invalidDate = pastDate
         
         #expect(!$invalidDate.isValid)
@@ -607,7 +607,7 @@ struct DateValidatorsTests {
         components.day = 2 // June 2, 2025 is a Monday
         let monday = calendar.date(from: components)!
         
-        @Validated(.isWeekday)
+        @Validated(.isAWeekday)
         var validDate = monday
         
         #expect($validDate.isValid)
@@ -623,7 +623,7 @@ struct DateValidatorsTests {
         components.day = 1 // June 1, 2025 is a Sunday
         let sunday = calendar.date(from: components)!
         
-        @Validated(.isWeekday)
+        @Validated(.isAWeekday)
         var invalidDate = sunday
         
         #expect(!$invalidDate.isValid)
@@ -643,7 +643,7 @@ struct DateValidatorsTests {
         components.day = 7 // June 7, 2025 is a Saturday
         let saturday = calendar.date(from: components)!
         
-        @Validated(.isWeekend)
+        @Validated(.isAtTheWeekend)
         var validDate = saturday
         
         #expect($validDate.isValid)
@@ -659,7 +659,7 @@ struct DateValidatorsTests {
         components.day = 2 // June 2, 2025 is a Monday
         let monday = calendar.date(from: components)!
         
-        @Validated(.isWeekend)
+        @Validated(.isAtTheWeekend)
         var invalidDate = monday
         
         #expect(!$invalidDate.isValid)

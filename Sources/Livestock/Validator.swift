@@ -22,7 +22,7 @@ public struct AnyValidator<Value> {
         validate = validator.validate
     }
 
-    func validate(_ value: Value) throws(ValidationError) {
+    public func validate(_ value: Value) throws(ValidationError) {
         try validate(value)
     }
 }

@@ -7,4 +7,4 @@
 import Foundation
 
 
-enum Validators {}
+public enum Validators {}

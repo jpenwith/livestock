@@ -5,47 +5,46 @@
 //  Created by James Penwith on 31/05/2025.
 //
 
-@propertyWrapper struct Validated<Value> {
-    let validators: [AnyValidator<Value>]
+@propertyWrapper public struct Validated<Value> {
+    public let validators: [AnyValidator<Value>]
 
-    var errors: [ValidationError] = []
+    public var errors: [ValidationError] = []
 
-    init(wrappedValue: Value, _ validators: AnyValidator<Value>...) {
+    public init(wrappedValue: Value, _ validators: AnyValidator<Value>...) {
         self.init(wrappedValue: wrappedValue, validators)
     }
     
-    init(wrappedValue: Value, _ validators: [AnyValidator<Value>]) {
+    public init(wrappedValue: Value, _ validators: [AnyValidator<Value>]) {
         self.wrappedValue = wrappedValue
         self.validators = validators
 
         self.errors = validate(wrappedValue)
     }
     
-    var wrappedValue: Value {
+    public var wrappedValue: Value {
         didSet { self.errors = validate(wrappedValue) }
     }
 
-    func validate(_ value: Value) -> [ValidationError] {
+    public func validate(_ value: Value) -> [ValidationError] {
         validators.validate(value)
     }
 
-    var isValid: Bool { errors.isEmpty }
+    public var isValid: Bool { errors.isEmpty }
 
-    var projectedValue: Self { self }
+    public var projectedValue: Self { self }
 }
 
-@propertyWrapper struct OptionalValidated<Value> {
-    let required: Required
+@propertyWrapper public struct OptionalValidated<Value> {
+    public let required: Required
+    public let validators: [AnyValidator<Value>]
     
-    let validators: [AnyValidator<Value>]
+    public var errors: [ValidationError] = []
     
-    var errors: [ValidationError] = []
-    
-    init(wrappedValue: Value? = nil, _ required: Required, _ validators: AnyValidator<Value>...) {
+    public init(wrappedValue: Value? = nil, _ required: Required, _ validators: AnyValidator<Value>...) {
         self.init(wrappedValue: wrappedValue, required, validators)
     }
     
-    init(wrappedValue: Value? = nil, _ required: Required, _ validators: [AnyValidator<Value>]) {
+    public init(wrappedValue: Value? = nil, _ required: Required, _ validators: [AnyValidator<Value>]) {
         self.wrappedValue = wrappedValue
         self.required = required
         self.validators = validators
@@ -53,11 +52,11 @@
         self.errors = validate(wrappedValue)
     }
     
-    var wrappedValue: Value? {
+    public var wrappedValue: Value? {
         didSet { self.errors = validate(wrappedValue) }
     }
 
-    func validate(_ value: Value?) -> [ValidationError] {
+    public func validate(_ value: Value?) -> [ValidationError] {
         if let value {
             return validators.validate(value)
         }
@@ -71,13 +70,13 @@
         }
     }
     
-    var isValid: Bool { errors.isEmpty }
+    public var isValid: Bool { errors.isEmpty }
     
-    var projectedValue: Self { self }
+    public var projectedValue: Self { self }
 }
 
 extension OptionalValidated {
-    enum Required {
+    public enum Required {
         case required
         case notRequired
     }

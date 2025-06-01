@@ -6,20 +6,20 @@
 //
 
 extension Validators {
-    enum NumericAndComparable {}
+    public enum NumericAndComparable {}
 }
 
 extension Validators.NumericAndComparable {
-    struct IsPositive<T: Numeric & Comparable>: Validator {
-        func validate(_ value: T) throws(ValidationError) {
+    public struct IsPositive<T: Numeric & Comparable>: Validator {
+        public func validate(_ value: T) throws(ValidationError) {
             guard value > T.zero else {
                 throw .init(message: "Number is not positive")
             }
         }
     }
     
-    struct IsNegative<T: Numeric & Comparable>: Validator {
-        func validate(_ value: T) throws(ValidationError) {
+    public struct IsNegative<T: Numeric & Comparable>: Validator {
+        public func validate(_ value: T) throws(ValidationError) {
             guard value < T.zero else {
                 throw .init(message: "Number is not negative")
             }
@@ -28,6 +28,6 @@ extension Validators.NumericAndComparable {
 }
 
 extension AnyValidator where Value: Numeric & Comparable {
-    static var  isPositive: Self { .init(Validators.NumericAndComparable.IsPositive()) }
-    static var  isNegative: Self { .init(Validators.NumericAndComparable.IsNegative()) }
+    public static var  isPositive: Self { .init(Validators.NumericAndComparable.IsPositive()) }
+    public static var  isNegative: Self { .init(Validators.NumericAndComparable.IsNegative()) }
 }

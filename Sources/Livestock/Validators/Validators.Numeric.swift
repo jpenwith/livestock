@@ -6,5 +6,5 @@
 //
 
 extension Validators {
-    enum Numeric {}
+    public enum Numeric {}
 }

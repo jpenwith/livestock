@@ -11,47 +11,60 @@ extension Validators {
 }
 
 extension Validators.Date {
-    struct IsPast: Validator {
-        func validate(_ value: Date) throws(ValidationError) {
+    public struct IsInThePast: Validator {
+        public func validate(_ value: Date) throws(ValidationError) {
             guard value < Date() else {
                 throw .init(message: "Date is not in the past")
             }
         }
     }
     
-    struct IsFuture: Validator {
-        func validate(_ value: Date) throws(ValidationError) {
+    public struct IsInTheFuture: Validator {
+        public func validate(_ value: Date) throws(ValidationError) {
             guard value > Date() else {
                 throw .init(message: "Date is not in the future")
             }
         }
     }
     
-    struct IsAfter: Validator {
-        let date: Date
+    public struct IsAfter: Validator {
+        public let date: Date
         
-        func validate(_ value: Date) throws(ValidationError) {
+        public init(date: Date) {
+            self.date = date
+        }
+        
+        public func validate(_ value: Date) throws(ValidationError) {
             guard value > date else {
                 throw .init(message: "Date is not after \(date)")
             }
         }
     }
     
-    struct IsBefore: Validator {
-        let date: Date
+    public struct IsBefore: Validator {
+        public let date: Date
         
-        func validate(_ value: Date) throws(ValidationError) {
+        public init(date: Date) {
+            self.date = date
+        }
+        
+        public func validate(_ value: Date) throws(ValidationError) {
             guard value < date else {
                 throw .init(message: "Date is not before \(date)")
             }
         }
     }
     
-    struct IsBetween: Validator {
-        let startDate: Date
-        let endDate: Date
+    public struct IsBetween: Validator {
+        public let startDate: Date
+        public let endDate: Date
         
-        func validate(_ value: Date) throws(ValidationError) {
+        public init(startDate: Date, endDate: Date) {
+            self.startDate = startDate
+            self.endDate = endDate
+        }
+        
+        public func validate(_ value: Date) throws(ValidationError) {
             guard value >= startDate else {
                 throw .init(message: "Date is before \(startDate)")
             }
@@ -62,11 +75,11 @@ extension Validators.Date {
         }
     }
     
-    struct IsWeekday: Validator {
-        func validate(_ value: Date) throws(ValidationError) {
+    public struct IsAWeekday: Validator {
+        public func validate(_ value: Date) throws(ValidationError) {
             let calendar = Calendar.current
             let weekday = calendar.component(.weekday, from: value)
-            
+
             // 1 = Sunday, 7 = Saturday in Gregorian calendar
             guard weekday != 1 && weekday != 7 else {
                 throw .init(message: "Date is not a weekday")
@@ -74,8 +87,8 @@ extension Validators.Date {
         }
     }
     
-    struct IsWeekend: Validator {
-        func validate(_ value: Date) throws(ValidationError) {
+    public struct IsAtTheWeekend: Validator {
+        public func validate(_ value: Date) throws(ValidationError) {
             let calendar = Calendar.current
             let weekday = calendar.component(.weekday, from: value)
             
@@ -88,11 +101,11 @@ extension Validators.Date {
 }
 
 extension AnyValidator where Value == Date {
-    static var  isPast: Self { .init(Validators.Date.IsPast()) }
-    static var  isFuture: Self { .init(Validators.Date.IsFuture()) }
-    static func isAfter(_ date: Date) -> Self { .init(Validators.Date.IsAfter(date: date)) }
-    static func isBefore(_ date: Date) -> Self { .init(Validators.Date.IsBefore(date: date)) }
-    static func isBetween(_ startDate: Date, _ endDate: Date) -> Self { .init(Validators.Date.IsBetween(startDate: startDate, endDate: endDate)) }
-    static var  isWeekday: Self { .init(Validators.Date.IsWeekday()) }
-    static var  isWeekend: Self { .init(Validators.Date.IsWeekend()) }
+    public static var  isInThePast: Self { .init(Validators.Date.IsInThePast()) }
+    public static var  isInTheFuture: Self { .init(Validators.Date.IsInTheFuture()) }
+    public static func isAfter(_ date: Date) -> Self { .init(Validators.Date.IsAfter(date: date)) }
+    public static func isBefore(_ date: Date) -> Self { .init(Validators.Date.IsBefore(date: date)) }
+    public static func isBetween(_ startDate: Date, _ endDate: Date) -> Self { .init(Validators.Date.IsBetween(startDate: startDate, endDate: endDate)) }
+    public static var  isAWeekday: Self { .init(Validators.Date.IsAWeekday()) }
+    public static var  isAtTheWeekend: Self { .init(Validators.Date.IsAtTheWeekend()) }
 }

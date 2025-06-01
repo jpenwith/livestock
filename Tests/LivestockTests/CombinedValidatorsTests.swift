@@ -125,7 +125,7 @@ struct CombinedValidatorsTests {
         let pastDate = now.addingTimeInterval(-86400 * 7) // One week ago
         let futureDate = now.addingTimeInterval(86400 * 7) // One week in future
 
-        @Validated(.isFuture, .isBefore(futureDate))
+        @Validated(.isInTheFuture, .isBefore(futureDate))
         var date = now.addingTimeInterval(86400) // Tomorrow
 
         #expect($date.isValid)

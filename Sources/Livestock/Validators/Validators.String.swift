@@ -10,39 +10,80 @@ extension Validators {
 }
 
 extension Validators.String {
-    struct IsNotEmpty: Validator {
-        func validate(_ value: String) throws(ValidationError) {
+    public struct IsNotEmpty: Validator {
+        public func validate(_ value: String) throws(ValidationError) {
             guard !value.isEmpty else {
                 throw .init(message: "Value is empty")
             }
         }
     }
 
-    struct IsCountLessThan: Validator {
-        let upperBound: Int
+    public struct IsCountLessThan: Validator {
+        public let upperBound: Int
 
-        func validate(_ value: String) throws(ValidationError) {
+        public init(upperBound: Int) {
+            self.upperBound = upperBound
+        }
+        
+        public func validate(_ value: String) throws(ValidationError) {
             guard value.count < upperBound else {
                 throw .init(message: "\(value) is >= \(upperBound) characters")
             }
         }
     }
 
-    struct IsCountGreaterThan: Validator {
-        let lowerBound: Int
+    public struct IsCountLessThanOrEqualTo: Validator {
+        public let upperBound: Int
+        
+        public init(upperBound: Int) {
+            self.upperBound = upperBound
+        }
 
-        func validate(_ value: String) throws(ValidationError) {
+        public func validate(_ value: String) throws(ValidationError) {
+            guard value.count <= upperBound else {
+                throw .init(message: "\(value) is > \(upperBound) characters")
+            }
+        }
+    }
+
+    public struct IsCountGreaterThan: Validator {
+        public let lowerBound: Int
+
+        public init(lowerBound: Int) {
+            self.lowerBound = lowerBound
+        }
+        
+        public func validate(_ value: String) throws(ValidationError) {
             guard value.count > lowerBound else {
                 throw .init(message: "\(value) is <= \(lowerBound) characters")
             }
         }
     }
 
-    struct IsCountBetween: Validator {
-        let lowerBound: Int
-        let upperBound: Int
+    public struct IsCountGreaterThanOrEqualTo: Validator {
+        public let lowerBound: Int
+        
+        public init(lowerBound: Int) {
+            self.lowerBound = lowerBound
+        }
 
-        func validate(_ value: String) throws(ValidationError) {
+        public func validate(_ value: String) throws(ValidationError) {
+            guard value.count >= lowerBound else {
+                throw .init(message: "\(value) is < \(lowerBound) characters")
+            }
+        }
+    }
+    
+    public struct IsCountBetween: Validator {
+        public let lowerBound: Int
+        public let upperBound: Int
+
+        public init(lowerBound: Int, upperBound: Int) {
+            self.lowerBound = lowerBound
+            self.upperBound = upperBound
+        }
+        
+        public func validate(_ value: String) throws(ValidationError) {
             guard value.count >= lowerBound else {
                 throw .init(message: "\(value) is < \(lowerBound) characters")
             }
@@ -53,46 +94,30 @@ extension Validators.String {
         }
     }
 
-    struct IsCountLessThanOrEqualTo: Validator {
-        let upperBound: Int
-
-        func validate(_ value: String) throws(ValidationError) {
-            guard value.count <= upperBound else {
-                throw .init(message: "\(value) is > \(upperBound) characters")
-            }
-        }
-    }
-
-    struct IsCountGreaterThanOrEqualTo: Validator {
-        let lowerBound: Int
-
-        func validate(_ value: String) throws(ValidationError) {
-            guard value.count >= lowerBound else {
-                throw .init(message: "\(value) is < \(lowerBound) characters")
-            }
-        }
-    }
-    
-    struct Matches: Validator {
-        let regex: Regex<Substring>
+    public struct Matches: Validator {
+        public let regex: Regex<Substring>
         
-        func validate(_ value: String) throws(ValidationError) {
+        public init(regex: Regex<Substring>) {
+            self.regex = regex
+        }
+        
+        public func validate(_ value: String) throws(ValidationError) {
             guard value.wholeMatch(of: regex) != nil else {
                 throw .init(message: "\(value) does not match \(regex)")
             }
         }
     }
 
-    struct Contains: Validator {
-        let substring: String
-        let caseSensitive: Bool
+    public struct Contains: Validator {
+        public let substring: String
+        public let caseSensitive: Bool
         
-        init(substring: String, caseSensitive: Bool = true) {
+        public init(substring: String, caseSensitive: Bool = true) {
             self.substring = substring
             self.caseSensitive = caseSensitive
         }
         
-        func validate(_ value: String) throws(ValidationError) {
+        public func validate(_ value: String) throws(ValidationError) {
             if caseSensitive {
                 guard value.contains(substring) else {
                     throw .init(message: "Value does not contain '\(substring)'")
@@ -105,16 +130,16 @@ extension Validators.String {
         }
     }
     
-    struct IsAlphaNumeric: Validator {
-        func validate(_ value: String) throws(ValidationError) {
+    public struct IsAlphaNumeric: Validator {
+        public func validate(_ value: String) throws(ValidationError) {
             guard value.allSatisfy({ $0.isLetter || $0.isNumber }) else {
                 throw .init(message: "Value contains non-alphanumeric characters")
             }
         }
     }
     
-    struct IsEmailAddress: Validator {
-        func validate(_ value: String) throws(ValidationError) {
+    public struct IsEmailAddress: Validator {
+        public func validate(_ value: String) throws(ValidationError) {
             let emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,64}$/.ignoresCase()
 
             guard value.wholeMatch(of: emailRegex) != nil else {
@@ -125,15 +150,14 @@ extension Validators.String {
 }
 
 extension AnyValidator where Value == String {
-    static var  isNotEmpty: Self { .init(Validators.String.IsNotEmpty()) }
-    static func isLessThan(_ upperBound: Int) -> Self { .init(Validators.String.IsCountLessThan(upperBound: upperBound)) }
-    static func isGreaterThan(_ lowerBound: Int) -> Self { .init(Validators.String.IsCountGreaterThan(lowerBound: lowerBound)) }
-    static func isBetween(_ lowerBound: Int, _ upperBound: Int) -> Self { .init(Validators.String.IsCountBetween(lowerBound: lowerBound, upperBound: upperBound)) }
-
-    static func isLessThanOrEqualTo(_ upperBound: Int) -> Self { .init(Validators.String.IsCountLessThanOrEqualTo(upperBound: upperBound)) }
-    static func isGreaterThanOrEqualTo(_ lowerBound: Int) -> Self { .init(Validators.String.IsCountGreaterThanOrEqualTo(lowerBound: lowerBound)) }
-    static func matches(_ regex: Regex<Substring>) -> Self { .init(Validators.String.Matches(regex: regex)) }
-    static var  isEmailAddress: Self { .init(Validators.String.IsEmailAddress()) }
-    static func contains(_ substring: String, caseSensitive: Bool = true) -> Self { .init(Validators.String.Contains(substring: substring, caseSensitive: caseSensitive)) }
-    static var  isAlphaNumeric: Self { .init(Validators.String.IsAlphaNumeric()) }
+    public static var  isNotEmpty: Self { .init(Validators.String.IsNotEmpty()) }
+    public static func isLessThan(_ upperBound: Int) -> Self { .init(Validators.String.IsCountLessThan(upperBound: upperBound)) }
+    public static func isLessThanOrEqualTo(_ upperBound: Int) -> Self { .init(Validators.String.IsCountLessThanOrEqualTo(upperBound: upperBound)) }
+    public static func isGreaterThan(_ lowerBound: Int) -> Self { .init(Validators.String.IsCountGreaterThan(lowerBound: lowerBound)) }
+    public static func isGreaterThanOrEqualTo(_ lowerBound: Int) -> Self { .init(Validators.String.IsCountGreaterThanOrEqualTo(lowerBound: lowerBound)) }
+    public static func isBetween(_ lowerBound: Int, _ upperBound: Int) -> Self { .init(Validators.String.IsCountBetween(lowerBound: lowerBound, upperBound: upperBound)) }
+    public static func matches(_ regex: Regex<Substring>) -> Self { .init(Validators.String.Matches(regex: regex)) }
+    public static var  isEmailAddress: Self { .init(Validators.String.IsEmailAddress()) }
+    public static func contains(_ substring: String, caseSensitive: Bool = true) -> Self { .init(Validators.String.Contains(substring: substring, caseSensitive: caseSensitive)) }
+    public static var  isAlphaNumeric: Self { .init(Validators.String.IsAlphaNumeric()) }
 }
