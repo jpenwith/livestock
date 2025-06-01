@@ -55,6 +55,25 @@ struct StringValidatorsTests {
         #expect($invalidValue.errors.first?.message == "Testing is >= 5 characters")
     }
     
+    // MARK: - lessThanOrEqualTo
+    @Test("String.lessThanOrEqualTo validator passes for strings with length equal to bound")
+    func lessThanOrEqualToPassesForEqualLength() throws {
+        @Validated(.isLessThanOrEqualTo(5))
+        var validValue = "Hello"
+
+        #expect($validValue.isValid)
+    }
+
+    @Test("String.lessThanOrEqualTo validator fails for strings with length greater than bound")
+    func lessThanOrEqualToFailsForGreaterLength() throws {
+        @Validated(.isLessThanOrEqualTo(5))
+        var invalidValue = "Testing"
+
+        #expect(!$invalidValue.isValid)
+        #expect($invalidValue.errors.count == 1)
+        #expect($invalidValue.errors.first?.message == "Testing is > 5 characters")
+    }
+
     // MARK: - greaterThan
     
     @Test("String.greaterThan validator passes for strings with length greater than bound")
@@ -85,6 +104,30 @@ struct StringValidatorsTests {
         #expect($invalidValue.errors.first?.message == "Test is <= 5 characters")
     }
     
+    // MARK: - greaterThanOrEqualTo
+    @Test("String.greaterThanOrEqualTo validator passes for strings with length greater than or equal to bound")
+    func greaterThanOrEqualToPassesForValuesAtOrAboveBound() throws {
+        @Validated(.isGreaterThanOrEqualTo(4))
+        var validValue1 = "Test"
+
+        #expect($validValue1.isValid)
+
+        @Validated(.isGreaterThanOrEqualTo(4))
+        var validValue2 = "Testing"
+
+        #expect($validValue2.isValid)
+    }
+
+    @Test("String.greaterThanOrEqualTo validator fails for strings with length less than bound")
+    func greaterThanOrEqualToFailsForLessLength() throws {
+        @Validated(.isGreaterThanOrEqualTo(5))
+        var invalidValue = "Test"
+
+        #expect(!$invalidValue.isValid)
+        #expect($invalidValue.errors.count == 1)
+        #expect($invalidValue.errors.first?.message == "Test is < 5 characters")
+    }
+
     // MARK: - between
     
     @Test("String.between validator passes for strings with length within bounds")
@@ -491,6 +534,30 @@ struct DateValidatorsTests {
         #expect($invalidDate.errors.first?.message.contains("Date is not before") ?? false)
     }
     
+    // MARK: - isLessThanOrEqualTo
+    @Test("Comparable.isLessThanOrEqualTo validator passes for values less than or equal to bound")
+    func isLessThanOrEqualToPassesForValuesAtOrBelowBound() throws {
+        @Validated(.isLessThanOrEqualTo(10))
+        var validValue1 = 10
+
+        #expect($validValue1.isValid)
+
+        @Validated(.isLessThanOrEqualTo(10))
+        var validValue2 = 5
+
+        #expect($validValue2.isValid)
+    }
+
+    @Test("Comparable.isLessThanOrEqualTo validator fails for values greater than bound")
+    func isLessThanOrEqualToFailsForInvalidValues() throws {
+        @Validated(.isLessThanOrEqualTo(10))
+        var invalidValue = 11
+
+        #expect(!$invalidValue.isValid)
+        #expect($invalidValue.errors.count == 1)
+        #expect($invalidValue.errors.first?.message == "Value is not less than or equal to 10")
+    }
+
     // MARK: - isBetween
     
     @Test("Date.isBetween validator passes for dates within range")
@@ -693,6 +760,30 @@ struct ComparableValidatorsTests {
         #expect(!$invalidValue2.isValid)
     }
     
+    // MARK: - isGreaterThanOrEqualTo
+    @Test("Comparable.isGreaterThanOrEqualTo validator passes for values greater than or equal to bound")
+    func isGreaterThanOrEqualToPassesForValuesAtOrAboveBound() throws {
+        @Validated(.isGreaterThanOrEqualTo(5))
+        var validValue1 = 5
+
+        #expect($validValue1.isValid)
+
+        @Validated(.isGreaterThanOrEqualTo(5))
+        var validValue2 = 10
+
+        #expect($validValue2.isValid)
+    }
+
+    @Test("Comparable.isGreaterThanOrEqualTo validator fails for values less than bound")
+    func isGreaterThanOrEqualToFailsForInvalidValues() throws {
+        @Validated(.isGreaterThanOrEqualTo(5))
+        var invalidValue = 4
+
+        #expect(!$invalidValue.isValid)
+        #expect($invalidValue.errors.count == 1)
+        #expect($invalidValue.errors.first?.message == "Value is not greater than or equal to 5")
+    }
+
     // MARK: - isLessThan
     
     @Test("Comparable.isLessThan validator passes for values less than bound")
