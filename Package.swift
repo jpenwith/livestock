@@ -15,11 +15,6 @@ let package = Package(
             targets: ["Livestock"]
         ),
     ],
-    dependencies: [
-        .package(url: "https://github.com/vapor/vapor.git", from: "4.110.1"),
-        .package(url: "https://github.com/vapor/fluent.git", from: "4.9.0"),
-
-    ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
