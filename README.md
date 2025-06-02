@@ -64,37 +64,53 @@ if let usernameError = user.$username.errorMessage {
 
 ### Available Validators
 
-Each validation rule is implemented as a separate validator struct that conforms to the `Validator` protocol:
+Below is a summary of built-in validators and their corresponding static `AnyValidator` extensions:
 
-#### String Validators
-- `EmailValidator` - Validates email format (via `.email`)
-- `AlphanumericValidator` - Ensures string contains only letters and numbers (via `.alphanumeric`)
-- `NotEmptyValidator` - Ensures string is not empty (via `.notEmpty`)
-- `MinLengthValidator` - Validates minimum string length (via `.minLength(Int)`)
-- `MaxLengthValidator` - Validates maximum string length (via `.maxLength(Int)`)
-- `RegexValidator` - Custom regex validation (via `.regex(NSRegularExpression)`)
+**String Validators**
+- `.isNotEmpty` (`Validators.String.IsNotEmpty`)
+- `.isLessThan(_ upperBound: Int)` (`Validators.String.IsCountLessThan`)
+- `.isLessThanOrEqualTo(_ upperBound: Int)` (`Validators.String.IsCountLessThanOrEqualTo`)
+- `.isGreaterThan(_ lowerBound: Int)` (`Validators.String.IsCountGreaterThan`)
+- `.isGreaterThanOrEqualTo(_ lowerBound: Int)` (`Validators.String.IsCountGreaterThanOrEqualTo`)
+- `.isBetween(_ lowerBound: Int, _ upperBound: Int)` (`Validators.String.IsCountBetween`)
+- `.matches(_ regex: Regex<Substring>)` (`Validators.String.Matches`)
+- `.isEmailAddress` (`Validators.String.IsEmailAddress`)
+- `.contains(_ substring: String, caseSensitive: Bool = true)` (`Validators.String.Contains`)
 
-#### Numeric Validators
-- `GreaterThanValidator` - Ensures value is greater than threshold (via `.greaterThan(Comparable)`)
-- `LessThanValidator` - Ensures value is less than threshold (via `.lessThan(Comparable)`)
-- `BetweenValidator` - Ensures value is within range (via `.between(min:max:)`)
+**Comparable Validators**
+- `.isGreaterThan(_ lowerBound: Value)` (`Validators.Comparable.IsGreaterThan`)
+- `.isGreaterThanOrEqualTo(_ lowerBound: Value)` (`Validators.Comparable.IsGreaterThanOrEqualTo`)
+- `.isLessThan(_ upperBound: Value)` (`Validators.Comparable.IsLessThan`)
+- `.isLessThanOrEqualTo(_ upperBound: Value)` (`Validators.Comparable.IsLessThanOrEqualTo`)
+- `.isBetween(_ lowerBound: Value, _ upperBound: Value)` (`Validators.Comparable.IsBetween`)
 
-#### Date Validators
-- `PastDateValidator` - Ensures date is in the past (via `.inPast`)
-- `FutureDateValidator` - Ensures date is in the future (via `.inFuture`)
-- `AfterDateValidator` - Ensures date is after specified date (via `.after(Date)`)
-- `BeforeDateValidator` - Ensures date is before specified date (via `.before(Date)`)
+**Numeric & Comparable Validators**
+- `.isPositive` (`Validators.NumericAndComparable.IsPositive`)
+- `.isNegative` (`Validators.NumericAndComparable.IsNegative`)
 
-#### Collection Validators
-- `MinCountValidator` - Ensures collection has minimum number of items (via `.minCount(Int)`)
-- `MaxCountValidator` - Ensures collection has maximum number of items (via `.maxCount(Int)`)
+**Binary Integer Validators**
+- `.isMultipleOf(_ divisor: T)` (`Validators.Numeric.BinaryInteger.IsMultipleOf`)
+- `.isEven` (`Validators.Numeric.BinaryInteger.IsEven`)
+- `.isOdd` (`Validators.Numeric.BinaryInteger.IsOdd`)
 
-#### Specialized Validators
-- `CreditCardValidator` - Validates credit card number format (via `.creditCard(type:)`)
-- `PhoneValidator` - Validates phone number format (via `.phone(format:)`)
-- `URLValidator` - Validates URL format (via `.url(requirement:)`)
-- `FileExtensionValidator` - Validates file extension (via `.fileExtension([String])`)
-- `CustomValidator` - Custom validation logic (via `.custom(validate:errorMessage:)`)
+**Collection Validators**
+- `.isNotEmpty` (`Validators.Collection.IsNotEmpty`)
+- `.isLessThan(_ upperBound: Int)` (`Validators.Collection.IsCountLessThan`)
+- `.isGreaterThan(_ lowerBound: Int)` (`Validators.Collection.IsCountGreaterThan`)
+- `.isBetween(_ lowerBound: Int, _ upperBound: Int)` (`Validators.Collection.IsCountBetween`)
+- `.allPass(_ validator: @escaping (Element) throws(ValidationError) -> Void)` (`Validators.Collection.AllElementsPass`)
+
+**Date Validators**
+- `.isInThePast` (`Validators.Date.IsInThePast`)
+- `.isInTheFuture` (`Validators.Date.IsInTheFuture`)
+- `.isAfter(_ date: Date)` (`Validators.Date.IsAfter`)
+- `.isBefore(_ date: Date)` (`Validators.Date.IsBefore`)
+- `.isBetween(_ startDate: Date, _ endDate: Date)` (`Validators.Date.IsBetween`)
+- `.isAWeekday` (`Validators.Date.IsAWeekday`)
+- `.isAtTheWeekend` (`Validators.Date.IsAtTheWeekend`)
+
+**Custom Validators**
+- `.custom(_ validator: @escaping (Value) throws(ValidationError) -> Void)` (`Validators.Custom`)
 
 ### Checking Validation State
 
