@@ -3,7 +3,7 @@
 [![Swift](https://img.shields.io/badge/Swift-5.6%2B-orange.svg)](https://swift.org)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-Livestock is a powerful, type-safe validation library for Swift that uses property wrappers to implement clean, declarative validations in your models.
+Livestock is a type-safe validation library for Swift that uses property wrappers to implement clean, declarative validations in your models.
 
 ## Features
 
