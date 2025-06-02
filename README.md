@@ -267,6 +267,10 @@ Livestock is built around these core components:
 
 This architecture allows for maximum flexibility while maintaining a simple and intuitive API.
 
+## Why 'Livestock'?
+
+[Ah-ha!](https://www.youtube.com/watch?v=XSCUHLBUE6g&t=22s)
+
 ## License
 
 Livestock is available under the MIT license. See the LICENSE file for more info.
