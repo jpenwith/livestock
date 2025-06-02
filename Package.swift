@@ -14,10 +14,6 @@ let package = Package(
             name: "Livestock",
             targets: ["Livestock"]
         ),
-        .library(
-            name: "Livestock+Fluent",
-            targets: ["Livestock+Fluent"]
-        ),
     ],
     dependencies: [
         .package(url: "https://github.com/vapor/vapor.git", from: "4.110.1"),
@@ -31,15 +27,6 @@ let package = Package(
             name: "Livestock",
             swiftSettings: [
                 .unsafeFlags(["-enable-bare-slash-regex"])
-            ]
-        ),
-        .target(
-            name: "Livestock+Fluent",
-            dependencies: [
-                "Livestock",
-
-                .product(name: "Fluent", package: "fluent"),
-                .product(name: "Vapor", package: "vapor"),
             ]
         ),
         .testTarget(
