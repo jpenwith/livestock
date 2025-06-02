@@ -1,5 +1,5 @@
 import Livestock
-import XCTest
+import Testing
 
 @Suite("AnyValidator.multiple Tests")
 struct AnyValidatorMultipleTests {
@@ -10,7 +10,7 @@ struct AnyValidatorMultipleTests {
         var validValue = 5
 
         let errors = $validValue.errors
-        expect(errors.isEmpty)
+        #expect(errors.isEmpty)
     }
 
     @Test("multiple validator fails when at least one validator fails")
@@ -19,7 +19,7 @@ struct AnyValidatorMultipleTests {
         var invalidValue = -1
 
         let errors = $invalidValue.errors
-        expect(errors.count == 1)
-        expect(errors[0].message == "Value is not greater than 0")
+        #expect(errors.count == 1)
+        #expect(errors[0].message == "Value is not greater than 0")
     }
 }
