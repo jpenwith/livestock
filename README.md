@@ -35,16 +35,16 @@ dependencies: [
 import Livestock
 
 struct User {
-    @Validated(.email)
+    @Validated(.isEmailAddress)
     var email: String
     
-    @Validated(.greaterThan(18))
+    @Validated(.isGreaterThan(18))
     var age: Int
     
-    @Validated(.inPast)
+    @Validated(.isInThePast)
     var dateOfBirth: Date
     
-    @Validated(.notEmpty, .alphanumeric, .maxLength(50))
+    @Validated(.isNotEmpty, .isLessThanOrEqualTo(50))
     var username: String
 }
 
@@ -113,7 +113,7 @@ if let errorMessage = user.$email.errorMessage {
 }
 
 // Check specific validation
-let isUsernameNotEmpty = user.$username.validate(with: .notEmpty)
+let isUsernameNotEmpty = user.$username.validate(with: .isNotEmpty)
 
 // Check all validations
 let allValid = user.$username.validateAll()
